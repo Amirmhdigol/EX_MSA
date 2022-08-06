@@ -3,8 +3,16 @@ version: '3.4'
 services:
   productdb:
     image: mongo
+  
   basketdb:
     image: redis
+  
+  discountdb:
+    image: postgres
+  
+  pgadmin:
+    image: dpage/pgadmin4
+
   portainer:
     image: portainer/portainer-ce
 
@@ -21,4 +29,7 @@ services:
       dockerfile: Services/Basket/Basket.Api/Dockerfile
 
 volumes:
+  mongo_data:
+  postgres_data:
   portainer_data:
+  pgadmin_data:
