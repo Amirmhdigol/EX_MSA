@@ -3,7 +3,6 @@ using Discount.Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-
 namespace Discount.Api.Controllers;
 
 [Route("api/[controller]")]
@@ -52,4 +51,4 @@ public class DiscountController : ControllerBase
         return Ok(await _repository.DeleteDiscount(productName));
     }
     #endregion
-} 
+}
