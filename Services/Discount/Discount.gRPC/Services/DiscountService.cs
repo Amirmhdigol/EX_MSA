@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Discount.gRPC.Entities;
 using Discount.gRPC.Protos;
 using Discount.gRPC.Repositories;
 using Grpc.Core;
@@ -18,6 +19,7 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
     }
 
     #endregion
+    #region GetDiscount
     public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
         var coupon = await _discountRepository.GetDiscount(request.ProductName);
@@ -27,4 +29,34 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
         _logger.LogInformation("Discount is retrived for product name");
         return _mapper.Map<CouponModel>(coupon);
     }
+    #endregion
+    #region CreateDiscount
+    public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
+    {
+        var coupon = _mapper.Map<Coupon>(request.Coupon);
+        var res = await _discountRepository.CreateDiscount(coupon);
+
+        _logger.LogInformation($"discount is successfully created for product {coupon.ProductName}");
+        var couponModel = _mapper.Map<CouponModel>(coupon);
+        return couponModel;
+    }
+    #endregion
+    #region UpdateDiscount
+    public override async Task<CouponModel> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
+    {
+        var coupon = _mapper.Map<Coupon>(request.Coupon);
+        await _discountRepository.UpdateDiscount(coupon);
+
+        _logger.LogInformation($"discoiunt is succesfully updated for product name {coupon.ProductName}");
+        return _mapper.Map<CouponModel>(coupon);
+    }
+    #endregion
+    #region DeleteDiscount
+    public override async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
+    {
+        var deleted = await _discountRepository.DeleteDiscount(request.ProductName);
+        var response = new DeleteDiscountResponse { Succes = deleted };
+        return response;
+    }
+    #endregion
 }
